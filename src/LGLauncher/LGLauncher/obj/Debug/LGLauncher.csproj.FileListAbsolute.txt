@@ -1,0 +1,11 @@
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\bin\Debug\LGLauncher.exe.config
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\bin\Debug\LGLauncher.exe
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\bin\Debug\LGLauncher.pdb
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.csproj.AssemblyReference.cache
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.DownloadForm.resources
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.Properties.Resources.resources
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.csproj.GenerateResource.cache
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.csproj.CoreCompileInputs.cache
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.exe
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.pdb
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.Form1.resources
