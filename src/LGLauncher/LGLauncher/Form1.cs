@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Deployment.Application;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -58,9 +59,17 @@ namespace LGLauncher
             CreateInstallationPath CIP = new CreateInstallationPath(this);
         }
 
-        public void UpdateList() 
+        public void UpdateList(bool CheckForUpdates = true, string CheckJustThis = "") 
         {
-        
+
+            if(CheckForUpdates) 
+            {
+             //CheckAll
+            }
+            if(CheckJustThis != "") 
+            {
+                //Check
+            }
         }
     }
 
