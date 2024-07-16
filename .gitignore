@@ -1,4 +1,3 @@
 
 *.vsidx
-*.vsidx
-src/LGLauncher/.vs/LGLauncher/v17/.suo
+/src/LGLauncher/.vs
