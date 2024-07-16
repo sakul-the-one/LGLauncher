@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LGLauncher
@@ -17,15 +10,54 @@ namespace LGLauncher
         public CreateInstallationPath(Form1 daddy)
         {
             InitializeComponent();
-            Daddy = daddy;  
+            Daddy = daddy;
         }
 
         private void createInstallFileButton_Click(object sender, EventArgs e)
         {
-           // FileStream fs = new FileStream(string );
-
+            // FileStream fs = new FileStream(string );
+            string Name = nameTextBox.Text;
+            string DownloadPath = URLTextBox.Text;
+            string InstallPath = downloadLocationTextBox.Text; //Why did I choose this name?
+            if (Name.Length > 0 && DownloadPath.Length > 0 && InstallPath.Length > 0)
+            {
+                try
+                {
+                    FileStream fs = new FileStream("Installations\\" + Name + "lgif", FileMode.Create);
+                    StreamWriter sw = new StreamWriter(fs);
+                    sw.Write(DownloadPath);
+                    sw.Write(InstallPath);
+                    sw.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else 
+            {
+                MessageBox.Show("Fill out all Textboxes!", "Almost wrong", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                return;
+            }
             Daddy.UpdateList();
             this.Close();
+        }
+
+        private void FindInstallPath_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog folderBrowser = new OpenFileDialog();
+            // Set validate names and check file exists to false otherwise windows will
+            // not let you select "Folder Selection."
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            // Always default to Folder Selection.
+            folderBrowser.FileName = "Folder Selection.";
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                downloadLocationTextBox.Text = folderPath;
+            }
         }
     }
 }

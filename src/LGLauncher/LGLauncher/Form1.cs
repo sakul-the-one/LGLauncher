@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Deployment.Application;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LGLauncher
@@ -28,7 +20,32 @@ namespace LGLauncher
             if (ImportDialog.ShowDialog() == DialogResult.OK)
             {
                 string path = ImportDialog.FileName;
-                write(@"Installations\"+ Path.GetFileName(path), read(path));
+                //write(@"Installations\"+ Path.GetFileName(path), read(path));
+
+                FileStream fs = new FileStream(path, FileMode.Open);
+                StreamReader sr = new StreamReader(fs);
+                string Downloadpath = sr.ReadLine();
+                sr.Close();
+
+                string NewFileName = Path.GetFileName(path);
+                if (Path.GetExtension(path) != ".lgif")
+                    NewFileName += ".lgif";
+
+
+                OpenFileDialog folderBrowser = new OpenFileDialog();
+                // Set validate names and check file exists to false otherwise windows will
+                // not let you select "Folder Selection."
+                folderBrowser.ValidateNames = false;
+                folderBrowser.CheckFileExists = false;
+                folderBrowser.CheckPathExists = true;
+                // Always default to Folder Selection.
+                folderBrowser.FileName = "Folder Selection.";
+
+                if (folderBrowser.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                    write("Installations\\" + NewFileName, Downloadpath + "\n" + folderPath);
+                }
             }
         }
         public static void write(string Path, string Text)
@@ -57,16 +74,17 @@ namespace LGLauncher
         private void createToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateInstallationPath CIP = new CreateInstallationPath(this);
+            CIP.Show();
         }
 
-        public void UpdateList(bool CheckForUpdates = true, string CheckJustThis = "") 
+        public void UpdateList(bool CheckForUpdates = true, string CheckJustThis = "")
         {
 
-            if(CheckForUpdates) 
+            if (CheckForUpdates)
             {
-             //CheckAll
+                //CheckAll
             }
-            if(CheckJustThis != "") 
+            if (CheckJustThis != "")
             {
                 //Check
             }
@@ -76,9 +94,9 @@ namespace LGLauncher
 
     public class Update
     {
-        public Update(Installation install, Vector2 Pos) 
+        public Update(Installation install, Vector2 Pos)
         {
-        
+
         }
     }
 }

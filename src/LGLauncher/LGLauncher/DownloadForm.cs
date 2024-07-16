@@ -43,7 +43,7 @@ namespace LGLauncher
         // Event to track the progress
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            downloadLabel.Text = e.ProgressPercentage + "/100";
+            downloadLabel.Text = e.ProgressPercentage + "/100%";
             downloadBar.Value = e.ProgressPercentage;
             if (e.ProgressPercentage == 100) Install();
         }
@@ -61,7 +61,7 @@ namespace LGLauncher
                 write(installation.InstallationPath, read(ChachePath));         
             }
             installBar.Value = 100;//Another lie, but why would it take long for probably such small files? Except you use a hard-drive
-            InstallLabel.Text = "Installing 100/100";
+            InstallLabel.Text = "Installing 100/100%";
         }
 
 

@@ -16,53 +16,37 @@ namespace LGLauncher
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            CC();
-            CIF();
+            Application.SetCompatibleTextRenderingDefault(false); // "Installations" && "Cache"
+            CheckFolder("Installations");
+            CheckFolder("Cache");
             Application.Run(new Form1());
         }
 
-        static void CC() //Checks if the Cachefolder exsist or not (CheckCache => CC)
+        static bool CheckFolder(string path, bool CreateNew = true) 
         {
-            string path = "Cache";//Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Vokabeln\"; //Definitly not copied from an other Programm ^^
             try
             {
                 // Determine whether the directory exists.
                 if (Directory.Exists(path))
                 {
                     //cConsole.WriteLine("That path exists already.");
+                    return true;
                 }
                 else
                 {
                     // Try to create the directory.
+                    if (!CreateNew) return false;
                     DirectoryInfo di = Directory.CreateDirectory(path);
                     //cConsole.WriteLine("The directory was created successfully at " + Directory.GetCreationTime(path) + ".");
+                    return true;
                 }
             }
             catch (Exception e)
             {
                 //cConsole.WriteLine("The process failed: " + e.ToString());
+                return false;
             }
-        }
-        static void CIF() //CheckInstallationsFolder => CIF
-        {
-            string path = "Installations";
-            try
-            {
-                if (Directory.Exists(path))
-                {
-                    //cConsole.WriteLine("That path exists already.");
-                }
-                else
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(path);
-                    //cConsole.WriteLine("The directory was created successfully at " + Directory.GetCreationTime(path) + ".");
-                }
-            }
-            catch (Exception e)
-            {
-                //cConsole.WriteLine("The process failed: " + e.ToString());
-            }
+            return false;
         }
     }
 }

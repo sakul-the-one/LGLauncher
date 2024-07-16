@@ -1,3 +1,4 @@
 
 *.vsidx
 /src/LGLauncher/.vs
+/src/LGLauncher/LGLauncher/bin/Debug/Installations

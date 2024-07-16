@@ -9,3 +9,4 @@ C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLaunche
 C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.exe
 C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.pdb
 C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.Form1.resources
+C:\Users\Sakul\Desktop\Programmin Resouces\Visuals Projekts\LGLauncher\LGLauncher\src\LGLauncher\LGLauncher\obj\Debug\LGLauncher.CreateInstallationPath.resources
