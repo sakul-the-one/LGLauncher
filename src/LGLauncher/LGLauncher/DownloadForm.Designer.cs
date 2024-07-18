@@ -99,8 +99,10 @@
             this.Controls.Add(this.downloadLabel);
             this.Controls.Add(this.installBar);
             this.Controls.Add(this.downloadBar);
+            this.MaximumSize = new System.Drawing.Size(518, 217);
+            this.MinimumSize = new System.Drawing.Size(518, 217);
             this.Name = "DownloadForm";
-            this.Text = "DownloadForm";
+            this.Text = "Download Form";
             this.ResumeLayout(false);
             this.PerformLayout();
 

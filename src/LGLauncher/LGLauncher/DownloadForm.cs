@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LGLauncher
@@ -11,59 +12,104 @@ namespace LGLauncher
         Installation installation;
         Form1 daddy;
         string ChachePath;
-        
+        int error = 0;
+        bool done =false;
 
         public DownloadForm(Installation install, Form1 Daddy)
         {
             this.installation = install;
-            ChachePath = @"Cache\" + install.Name;//Chache Folder
-
+            ChachePath = @"Cache\" + install.Name + (Path.GetExtension(install.RealDownloadPath).ToLower() == ".zip" ? ".zip" : "");
+            daddy = Daddy;
+            //Chache Folder
+            this.Text = install.Name;
             InitializeComponent();
-            
         }
-        public int DoStuff() 
+
+        
+        public int UpdateApplication()
         {
-            Download(installation.DownloadPath);
-            Install();
-            return 0;
+           // MessageBox.Show(installation.RealDownloadPath+ "\n" + installation.Name  +"\n" + installation.Version, "Something went alright! {UpdateApplication()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Download(installation.RealDownloadPath);
+            return error;
         }
         void Download(string website)
         {
-            using (WebClient wc = new WebClient())
+            try
             {
-                wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                 wc.DownloadFileAsync(
-                    // Param1 = Link of file
-                    new System.Uri(website),
-                    // Param2 = Path to save
-                    ChachePath
-                );
+                //MessageBox.Show(website, "Something went alright! {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (WebClient wc = new WebClient())
+                {
+                    //req.UserAgent = "[any words that is more than 5 characters]";
+                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    wc.DownloadFileAsync(
+                       // Param1 = Link of file
+                       new System.Uri(website),
+                       // Param2 = Path to save
+                       ChachePath
+                   );
+                    
+                    done = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                error += 1;
+                MessageBox.Show(ex.Message + "\n" + website, "Something went wrong {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         // Event to track the progress
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            downloadLabel.Text = e.ProgressPercentage + "/100%";
+            downloadLabel.Text = "Downloading: " +e.ProgressPercentage + "/100%";
             downloadBar.Value = e.ProgressPercentage;
             if (e.ProgressPercentage == 100) Install();
         }
-
+        
         void Install()
         {
-            if (Path.GetExtension(ChachePath) == "zip")
+            try
             {
-                //Un-Zip
-                ZipFile.ExtractToDirectory(ChachePath, installation.InstallationPath);
-                
+                if (Path.GetExtension(ChachePath) == ".zip")
+                {
+                    //Un-Zip
+                    string NewPath = installation.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(installation.Name);
+                    Program.CheckFolder(NewPath);
+                    ZipFile.ExtractToDirectory(ChachePath, NewPath);
+                }
+                else
+                {
+                    // write(installation.InstallationPath, read(ChachePath));
+                    File.Copy(ChachePath, installation.InstallationPath + "\\" + installation.Name + Path.GetExtension(installation.RealDownloadPath).ToLower());
+                }
+                installBar.Value = 100;//Another lie, but why would it take long for probably such small files? Except you use a hard-drive
+                InstallLabel.Text = "Installing: 100/100%";
+                Finish();
             }
-            else
+            catch (System.IO.IOException) 
             {
-                write(installation.InstallationPath, read(ChachePath));         
+                //We will ignore this. You can try it out without it, but it will just annoy you and it will somehow still works sooooooooooo
             }
-            installBar.Value = 100;//Another lie, but why would it take long for probably such small files? Except you use a hard-drive
-            InstallLabel.Text = "Installing 100/100%";
+            catch (Exception ex)
+            {
+                error += 1;
+                MessageBox.Show(ex.Message, "Something went wrong {Install()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+        void Finish()
+        {
+            //Update the Installation
+            FileStream fs = new FileStream("Installations\\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.WriteLine(installation.DownloadPath);// Updater Download path
+            sw.WriteLine(installation.InstallationPath);// Installpath
+            sw.WriteLine(installation.NewVersion); //Version
+            sw.Close();
 
+            installation.Version = installation.NewVersion;//I hope this works, if not, then not.
+            daddy.UpdateList();
+
+            this.Close();
+        }
 
         //Biggest Lie in history :)))))
         private void continueButton_Click(object sender, EventArgs e)
@@ -74,31 +120,6 @@ namespace LGLauncher
         private void pauseButton_Click(object sender, EventArgs e)
         {
 
-        }
-
-        //Code below copied from me 2020 and i have no idea if this is good or bad, but it worked then, so why not now?
-
-        public static void write(string Path, string Text)
-        {
-            FileStream fs = new FileStream(Path, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(Text);
-            sw.Close();
-        }
-
-        public static string read(string Path)
-        {
-            string Texxt = string.Empty;
-            FileStream fs = new FileStream(Path, FileMode.Open);
-            StreamReader sr = new StreamReader(fs);
-            string zeile;
-            while (sr.Peek() != -1)
-            {
-                zeile = sr.ReadLine();
-                Texxt += zeile + "\n";
-            }
-            sr.Close();
-            return Texxt;
         }
     }
 }

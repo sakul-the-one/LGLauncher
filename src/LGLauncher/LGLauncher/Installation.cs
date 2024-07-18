@@ -1,26 +1,95 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Windows.Forms;
 
 namespace LGLauncher
 {
     public class Installation
     {
         public string Name;
-        public string DownloadPath;
+        public string DownloadPath; //Path were it should Download information to download
         public string InstallationPath;
-    }
-    public class Vector2
-    {
-        public int x; 
-        public int y;
+        public string Version; //Trust me, it needs to be a string
+        public string NewVersion;
+        public string RealDownloadPath; //Path from where it should download
+        public Color BColor = Color.White;
 
-        public Vector2(int x, int y)
+        public bool NeedsUpdate() //Hihly Dangerous btw.
         {
-            this.x = x;
-            this.y = y;
+            bool PC = pNeedsUpdate();//PrivateCheck => PC
+            if (Color.Red == BColor) return false;
+            else return PC;
+        }
+        private bool pNeedsUpdate()
+        {
+            string[] Data = getCurrentEverything(DownloadPath); //Get Data From Website/Server
+            if (Data == null) return false;//Check for the return of the Data
+            //Sets Data
+            NewVersion = Data[0];
+            RealDownloadPath = Data[1];
+            //MessageBox.Show("\"" + Data[0] + "\"" + "\n" + "\"" + Version + "\"", "Something went alright!", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            if (Version != Data[0]) //Check Version
+                return true;
+            else BColor = Color.Green;
+            return false;
+        }
+
+        string[] getCurrentEverything(string URL)
+        {
+            try
+            {
+                string[] Everything = new string[2];
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+                request.UseDefaultCredentials = true;
+                request.UserAgent = "BlackHole";
+                WebResponse response = request.GetResponse();
+                Stream data = response.GetResponseStream();
+                string html = String.Empty;
+                using (StreamReader sr = new StreamReader(data))
+                {
+                    Everything[0] = sr.ReadLine();
+                    Everything[1] = sr.ReadLine();
+                }
+                //MessageBox.Show(Everything[0] + "\n" + Everything[1], "Something went alright!", MessageBoxButtons.OK, MessageBoxIcon.Question );
+                return Everything;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + URL, "Something went wrong {getCurrentEverything}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                BColor = Color.Red;
+                return new string[2];
+            }
         }
     }
 }
+//public static void ExtractToDirectory(this ZipArchive archive, string destinationDirectoryName, bool overwrite) //https://stackoverflow.com/questions/14795197/forcefully-replacing-existing-files-during-extracting-file-using-system-io-compr
+//{
+//    if (!overwrite)
+//    {
+//        archive.ExtractToDirectory(destinationDirectoryName);
+//        return;
+//    }
+
+//    DirectoryInfo di = Directory.CreateDirectory(destinationDirectoryName);
+//    string destinationDirectoryFullPath = di.FullName;
+
+//    foreach (ZipArchiveEntry file in archive.Entries)
+//    {
+//        string completeFileName = Path.GetFullPath(Path.Combine(destinationDirectoryFullPath, file.FullName));
+
+//        if (!completeFileName.StartsWith(destinationDirectoryFullPath, StringComparison.OrdinalIgnoreCase))
+//        {
+//            throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
+//        }
+
+//        if (file.Name == "")
+//        {// Assuming Empty for Directory
+//            Directory.CreateDirectory(Path.GetDirectoryName(completeFileName));
+//            continue;
+//        }
+//        file.ExtractToFile(completeFileName, true);
+//    }
+//}

@@ -23,10 +23,11 @@ namespace LGLauncher
             {
                 try
                 {
-                    FileStream fs = new FileStream("Installations\\" + Name + "lgif", FileMode.Create);
+                    FileStream fs = new FileStream("Installations\\" + Name + ".lgif", FileMode.Create);
                     StreamWriter sw = new StreamWriter(fs);
-                    sw.Write(DownloadPath);
-                    sw.Write(InstallPath);
+                    sw.WriteLine(DownloadPath);
+                    sw.WriteLine(InstallPath);
+                    sw.WriteLine("-1");
                     sw.Close();
                 }
                 catch (Exception ex)
@@ -39,7 +40,7 @@ namespace LGLauncher
                 MessageBox.Show("Fill out all Textboxes!", "Almost wrong", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 return;
             }
-            Daddy.UpdateList();
+            Daddy.UpdateInstalls();
             this.Close();
         }
 

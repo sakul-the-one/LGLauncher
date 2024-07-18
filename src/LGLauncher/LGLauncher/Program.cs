@@ -13,16 +13,16 @@ namespace LGLauncher
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false); // "Installations" && "Cache"
             CheckFolder("Installations");
             CheckFolder("Cache");
-            Application.Run(new Form1());
+            Application.Run(new Form1(args));
         }
 
-        static bool CheckFolder(string path, bool CreateNew = true) 
+        public static bool CheckFolder(string path, bool CreateNew = true) 
         {
             try
             {
@@ -41,12 +41,13 @@ namespace LGLauncher
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 //cConsole.WriteLine("The process failed: " + e.ToString());
-                return false;
+                MessageBox.Show(ex.Message, "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;       
             }
-            return false;
+            //return false;
         }
     }
 }
