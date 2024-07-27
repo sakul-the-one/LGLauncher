@@ -97,6 +97,33 @@ namespace LGLauncher
 
         }
 
+        //Used for only selected stuff
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(listView1.SelectedItems.Count > 0)) 
+            {
+                selectedLabel.Text = "Selected: ";
+            }
+            else 
+            {
+                selectedLabel.Text = "Selected: " + listView1.SelectedItems[0].Text;//listView1.Items[listView1.index].Text;
+            }
+        }
+
+        private void downloadSelectedButton_Click(object sender, EventArgs e)
+        {
+            if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
+
+            DownloadForm df = new DownloadForm(_installations[listView1.SelectedItems[0].Text], this);
+            df.Show();
+            df.UpdateApplication();
+        }
+
+        private void NothingSelectedError() 
+        {
+            MessageBox.Show("You have no item selected!", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         //ToolStrip
         private void createToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -165,7 +192,5 @@ namespace LGLauncher
             sr.Close();
             return Texxt;
         }
-
-       
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -74,7 +75,8 @@ namespace LGLauncher
                     //Un-Zip
                     string NewPath = installation.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(installation.Name);
                     Program.CheckFolder(NewPath);
-                    ZipFile.ExtractToDirectory(ChachePath, NewPath);
+                    //ZipFile.ExtractToDirectory(ChachePath, NewPath);
+                    ExtractZipFile(ChachePath, NewPath);
                 }
                 else
                 {
@@ -109,6 +111,48 @@ namespace LGLauncher
             daddy.UpdateList();
 
             this.Close();
+        }
+
+        void ExtractZipFile(string Origin, string NewLocation) 
+        {
+            FileStream fs = new FileStream(Origin, FileMode.Open);
+            ZipArchive archive = new ZipArchive(fs);
+            //Make Space (Deleting old Folders, needs to be done for most Games!)
+            foreach (ZipArchiveEntry file in archive.Entries)
+            {
+                string completeFileName = Path.GetFullPath(Path.Combine(NewLocation, file.FullName));
+
+                if (!completeFileName.StartsWith(NewLocation, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
+                }
+
+                if (file.Name == "")
+                {// Assuming Empty for Directory
+                    Directory.Delete(Path.GetDirectoryName(completeFileName));
+                    continue;
+                }
+                //file.ExtractToFile(completeFileName, true);
+            }
+
+            //Afzer Space is there, create everything new!
+            foreach (ZipArchiveEntry file in archive.Entries)
+            {
+                string completeFileName = Path.GetFullPath(Path.Combine(NewLocation, file.FullName));
+
+                if (!completeFileName.StartsWith(NewLocation, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
+                }
+
+                if (file.Name == "")
+                {// Assuming Empty for Directory
+                    Directory.CreateDirectory(Path.GetDirectoryName(completeFileName));
+                    continue;
+                }
+                file.ExtractToFile(completeFileName, true);
+            }
+            fs.Dispose();
         }
 
         //Biggest Lie in history :)))))

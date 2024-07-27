@@ -39,6 +39,8 @@
             this.mainPanel = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.updateButton = new System.Windows.Forms.Button();
+            this.selectedLabel = new System.Windows.Forms.Label();
+            this.downloadSelectedButton = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -129,10 +131,11 @@
             this.listView1.Size = new System.Drawing.Size(542, 347);
             this.listView1.TabIndex = 5;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(24, 66);
+            this.updateButton.Location = new System.Drawing.Point(28, 81);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(75, 23);
             this.updateButton.TabIndex = 6;
@@ -140,11 +143,32 @@
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
+            // selectedLabel
+            // 
+            this.selectedLabel.AutoSize = true;
+            this.selectedLabel.Location = new System.Drawing.Point(25, 65);
+            this.selectedLabel.Name = "selectedLabel";
+            this.selectedLabel.Size = new System.Drawing.Size(52, 13);
+            this.selectedLabel.TabIndex = 7;
+            this.selectedLabel.Text = "Selected:";
+            // 
+            // downloadSelectedButton
+            // 
+            this.downloadSelectedButton.Location = new System.Drawing.Point(28, 120);
+            this.downloadSelectedButton.Name = "downloadSelectedButton";
+            this.downloadSelectedButton.Size = new System.Drawing.Size(75, 23);
+            this.downloadSelectedButton.TabIndex = 8;
+            this.downloadSelectedButton.Text = "Download Selected";
+            this.downloadSelectedButton.UseVisualStyleBackColor = true;
+            this.downloadSelectedButton.Click += new System.EventHandler(this.downloadSelectedButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(794, 441);
+            this.Controls.Add(this.downloadSelectedButton);
+            this.Controls.Add(this.selectedLabel);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.mainPanel);
@@ -176,6 +200,8 @@
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.Label selectedLabel;
+        private System.Windows.Forms.Button downloadSelectedButton;
     }
 }
 

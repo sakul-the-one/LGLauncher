@@ -58,7 +58,7 @@ namespace LGLauncher
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + URL, "Something went wrong {getCurrentEverything}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(ex.Message + "\n" + URL, "Something went wrong {getCurrentEverything}", MessageBoxButtons.OK, MessageBoxIcon.Error); //We dont need this in the build!!
                 BColor = Color.Red;
                 return new string[2];
             }
