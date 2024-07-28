@@ -22,7 +22,7 @@ namespace LGLauncher
             //Creation of Me
             me = new Installation(); //Me is always Hardcoded, to make it simple
             me.Version = "0.0.1";
-            me.DownloadPath = "Raw Github something";
+            me.DownloadPath = "https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGlauncher.redir";
             me.InstallationPath = "\\Cache\\self.zip";
             MeUpdate = me.NeedsUpdate();
             // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
