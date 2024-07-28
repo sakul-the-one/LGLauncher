@@ -29,7 +29,7 @@ namespace LGLauncher
             //Sets Data
             NewVersion = Data[0];
             RealDownloadPath = Data[1];
-            //MessageBox.Show("\"" + Data[0] + "\"" + "\n" + "\"" + Version + "\"", "Something went alright!", MessageBoxButtons.OK, MessageBoxIcon.Question);
+            MessageBox.Show("\"" + Data[0] + "\"" + "\n" + "\"" + Version + "\"", "Something went alright! "+Name, MessageBoxButtons.OK, MessageBoxIcon.Question);
             if (Version != Data[0]) //Check Version
                 return true;
             else BColor = Color.Green;
@@ -44,7 +44,7 @@ namespace LGLauncher
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(DownloadPath);
                 request.UseDefaultCredentials = true;
-                request.UserAgent = "BlackHole";
+                request.UserAgent = "LGLauncher-UpdateRequest";
                 WebResponse response = request.GetResponse();
                 Stream data = response.GetResponseStream();
                 string html = String.Empty;
@@ -53,12 +53,12 @@ namespace LGLauncher
                     Everything[0] = sr.ReadLine();
                     Everything[1] = sr.ReadLine();
                 }
-                //MessageBox.Show(Everything[0] + "\n" + Everything[1], "Something went alright!", MessageBoxButtons.OK, MessageBoxIcon.Question );
+                MessageBox.Show(Everything[0] + "\n" + Everything[1], "Something went alright! {getCurrentEverything} + " + DownloadPath, MessageBoxButtons.OK, MessageBoxIcon.Question );
                 return Everything;
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message + "\n" + URL, "Something went wrong {getCurrentEverything}", MessageBoxButtons.OK, MessageBoxIcon.Error); //We dont need this in the build!!
+                MessageBox.Show(ex.Message + "\n" + DownloadPath, "Something went wrong {getCurrentEverything}", MessageBoxButtons.OK, MessageBoxIcon.Error); //We dont need this in the build!!
                 BColor = Color.Red;
                 return new string[2];
             }

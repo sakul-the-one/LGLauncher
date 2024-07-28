@@ -17,13 +17,14 @@ namespace LGLauncher
         public Form1(string[] args)
         {
             InitializeComponent();
-            //Intialising all Installs:
-            UpdateList();
             //Creation of Me
             me = new Installation(); //Me is always Hardcoded, to make it simple
-            me.Version = "0.0.1";
-            me.DownloadPath = "https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGlauncher.redir";
+
+            me.Name = "me";
+            me.Version = "0.0.2";
+            me.DownloadPath = @"https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGLauncher.redir";
             me.InstallationPath = "\\Cache\\self.zip";
+
             MeUpdate = me.NeedsUpdate();
             // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
             ReCheckInstlattion();
@@ -37,7 +38,8 @@ namespace LGLauncher
                 selfUpdate.Visible = false;
                 launcherStatusLabel.Text = me.Version;
             }
-
+            //Intialising all Installs:
+            UpdateList();
         }
         //SelfUpdateStuff
         private void selfUpdate_Click(object sender, EventArgs e)
