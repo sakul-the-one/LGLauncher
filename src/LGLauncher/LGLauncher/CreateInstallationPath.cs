@@ -23,7 +23,7 @@ namespace LGLauncher
             {
                 try
                 {
-                    FileStream fs = new FileStream("Installations\\" + Name + ".lgif", FileMode.Create);
+                    FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Name + ".lgif", FileMode.Create);
                     StreamWriter sw = new StreamWriter(fs);
                     sw.WriteLine(DownloadPath);
                     sw.WriteLine(InstallPath);

@@ -3,7 +3,7 @@
   "WorkspaceRootPath": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|c:\\users\\sakul\\desktop\\programmin resouces\\visuals projekts\\lglauncher\\lglauncher\\src\\lglauncher\\lglauncher\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -11,20 +11,20 @@
       "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\installation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\installation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\downloadform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\downloadform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|c:\\users\\sakul\\desktop\\programmin resouces\\visuals projekts\\lglauncher\\lglauncher\\src\\lglauncher\\lglauncher\\installation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\installation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\createinstallationpath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\createinstallationpath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|solutionrelative:lglauncher\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EE6505A4-8B95-4719-9F04-D744E2B00DE3}|LGLauncher\\LGLauncher.csproj|C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\lglauncher\\downloadform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
@@ -58,13 +58,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "CreateInstallationPath.cs",
               "DocumentMoniker": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\CreateInstallationPath.cs",
               "RelativeDocumentMoniker": "LGLauncher\\CreateInstallationPath.cs",
               "ToolTip": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\CreateInstallationPath.cs",
               "RelativeToolTip": "LGLauncher\\CreateInstallationPath.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAqwB8AAAARAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAQwBkAAACIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-15T18:43:45.828Z",
               "EditorCaption": ""
@@ -77,20 +77,20 @@
               "RelativeDocumentMoniker": "LGLauncher\\DownloadForm.cs",
               "ToolTip": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\DownloadForm.cs",
               "RelativeToolTip": "LGLauncher\\DownloadForm.cs",
-              "ViewState": "AQIAAEAAAAAAAAAAAAAqwJoAAAAZAAAA",
+              "ViewState": "AQIAABwAAAAAAAAAAADwvyMAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-15T17:53:07.584Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Installation.cs",
               "DocumentMoniker": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\Installation.cs",
               "RelativeDocumentMoniker": "LGLauncher\\Installation.cs",
               "ToolTip": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\Installation.cs",
               "RelativeToolTip": "LGLauncher\\Installation.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAwwF0AAAAHAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwA8AAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-15T16:46:23.326Z",
               "EditorCaption": ""
@@ -103,7 +103,7 @@
               "RelativeDocumentMoniker": "LGLauncher\\Form1.cs",
               "ToolTip": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\Form1.cs",
               "RelativeToolTip": "LGLauncher\\Form1.cs",
-              "ViewState": "AQIAAFcAAAAAAAAAAAAWwGgAAAAyAAAA",
+              "ViewState": "AQIAADoAAAAAAAAAAAAowFkAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-15T16:35:54.942Z",
               "EditorCaption": ""
@@ -122,13 +122,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\Program.cs",
               "RelativeDocumentMoniker": "LGLauncher\\Program.cs",
               "ToolTip": "C:\\Users\\Sakul\\Desktop\\Programmin Resouces\\Visuals Projekts\\LGLauncher\\LGLauncher\\src\\LGLauncher\\LGLauncher\\Program.cs",
               "RelativeToolTip": "LGLauncher\\Program.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAgwC4AAAAQAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-15T16:34:36.375Z",
               "EditorCaption": ""

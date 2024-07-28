@@ -30,7 +30,7 @@
         {
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.launcherStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.meUpdatePrcoessBar = new System.Windows.Forms.ToolStripProgressBar();
             this.selfUpdate = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +49,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.launcherStatusLabel,
-            this.toolStripProgressBar1});
+            this.meUpdatePrcoessBar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 419);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(794, 22);
@@ -62,11 +62,11 @@
             this.launcherStatusLabel.Size = new System.Drawing.Size(80, 17);
             this.launcherStatusLabel.Text = "Update or not";
             // 
-            // toolStripProgressBar1
+            // meUpdatePrcoessBar
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            this.toolStripProgressBar1.Visible = false;
+            this.meUpdatePrcoessBar.Name = "meUpdatePrcoessBar";
+            this.meUpdatePrcoessBar.Size = new System.Drawing.Size(100, 16);
+            this.meUpdatePrcoessBar.Visible = false;
             // 
             // selfUpdate
             // 
@@ -77,6 +77,7 @@
             this.selfUpdate.TabIndex = 2;
             this.selfUpdate.Text = "Update Launcher";
             this.selfUpdate.UseVisualStyleBackColor = true;
+            this.selfUpdate.Click += new System.EventHandler(this.selfUpdate_Click);
             // 
             // menuStrip1
             // 
@@ -191,7 +192,7 @@
         #endregion
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel launcherStatusLabel;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripProgressBar meUpdatePrcoessBar;
         private System.Windows.Forms.Button selfUpdate;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;

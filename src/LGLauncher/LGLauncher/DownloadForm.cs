@@ -100,7 +100,7 @@ namespace LGLauncher
         void Finish()
         {
             //Update the Installation
-            FileStream fs = new FileStream("Installations\\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+            FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
             sw.WriteLine(installation.DownloadPath);// Updater Download path
             sw.WriteLine(installation.InstallationPath);// Installpath

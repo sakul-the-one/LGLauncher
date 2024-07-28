@@ -17,12 +17,12 @@ namespace LGLauncher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false); // "Installations" && "Cache"
-            CheckFolder("Installations");
+            CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\");
             CheckFolder("Cache");
             Application.Run(new Form1(args));
         }
 
-        public static bool CheckFolder(string path, bool CreateNew = true) 
+        public static bool CheckFolder(string path, bool CreateNew = true)
         {
             try
             {
@@ -45,9 +45,9 @@ namespace LGLauncher
             {
                 //cConsole.WriteLine("The process failed: " + e.ToString());
                 MessageBox.Show(ex.Message, "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;       
+                return false;
             }
             //return false;
-        }
+        } 
     }
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace LGLauncher
@@ -9,13 +12,82 @@ namespace LGLauncher
     public partial class Form1 : Form
     {
         Dictionary<string, Installation> _installations;
+        Installation me;
+        bool MeUpdate = false;
         public Form1(string[] args)
         {
             InitializeComponent();
-            //UpdateInstalls();
             //Intialising all Installs:
             UpdateList();
+            //Creation of Me
+            me = new Installation(); //Me is always Hardcoded, to make it simple
+            me.Version = "0.0.1";
+            me.DownloadPath = "Raw Github something";
+            me.InstallationPath = "\\Cache\\self.zip";
+            MeUpdate = me.NeedsUpdate();
+            // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
+            ReCheckInstlattion();
+            if (MeUpdate) 
+            {
+                launcherStatusLabel.Text = "New Update aviable: " + me.Version + " --> " + me.NewVersion;
+            }
+            else 
+            {
+                meUpdatePrcoessBar.Visible = false;
+                selfUpdate.Visible = false;
+                launcherStatusLabel.Text = me.Version;
+            }
 
+        }
+        //SelfUpdateStuff
+        private void selfUpdate_Click(object sender, EventArgs e)
+        {
+            ReCheckInstlattion();
+            Download(me.RealDownloadPath);
+        }
+
+        void Download(string website)
+        {
+            try
+            {
+                //MessageBox.Show(website, "Something went alright! {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (WebClient wc = new WebClient())
+                {
+                    //req.UserAgent = "[any words that is more than 5 characters]";
+                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    wc.DownloadFileAsync(
+                       // Param1 = Link of file
+                       new System.Uri(website),
+                    // Param2 = Path to save
+                       me.InstallationPath
+                   );
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + website, "Something went wrong {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Event to track the progress
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            //downloadLabel.Text = "Downloading: " + e.ProgressPercentage + "/100%";
+            meUpdatePrcoessBar.Value = e.ProgressPercentage;
+            if (e.ProgressPercentage == 100) Finish();
+        }
+
+        public void ReCheckInstlattion()
+        {
+            string BatContent = "@echo off\n"
+                + "powershell -Command \"Expand-Archive '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath + "' -DestinationPath '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)+"'\"\n"
+                + " start '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "' LGLauncher.exe";
+            write("UnPack.bat",BatContent);
+        }
+        void Finish() 
+        {
+            System.Diagnostics.Process.Start("UnPack.bat");
+            this.Close();
         }
 
         //Really Needed Functions
@@ -25,7 +97,7 @@ namespace LGLauncher
             _installations = new Dictionary<string, Installation>();
             try
             {
-                string[] files = Directory.GetFiles("Installations");
+                string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\");
                 //cConsole.WriteLine("Found " + files.GetLength().ToString() + " Files");
 
                 foreach (string file in files)

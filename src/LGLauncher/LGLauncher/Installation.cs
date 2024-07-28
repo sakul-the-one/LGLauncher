@@ -16,7 +16,7 @@ namespace LGLauncher
         public string RealDownloadPath; //Path from where it should download
         public Color BColor = Color.White;
 
-        public bool NeedsUpdate() //Hihly Dangerous btw.
+        public bool NeedsUpdate() //Highly Dangerous btw.
         {
             bool PC = pNeedsUpdate();//PrivateCheck => PC
             if (Color.Red == BColor) return false;
@@ -24,7 +24,7 @@ namespace LGLauncher
         }
         private bool pNeedsUpdate()
         {
-            string[] Data = getCurrentEverything(DownloadPath); //Get Data From Website/Server
+            string[] Data = getCurrentEverything(); //Get Data From Website/Server
             if (Data == null) return false;//Check for the return of the Data
             //Sets Data
             NewVersion = Data[0];
@@ -36,13 +36,13 @@ namespace LGLauncher
             return false;
         }
 
-        string[] getCurrentEverything(string URL)
+        string[] getCurrentEverything()
         {
             try
             {
                 string[] Everything = new string[2];
 
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(DownloadPath);
                 request.UseDefaultCredentials = true;
                 request.UserAgent = "BlackHole";
                 WebResponse response = request.GetResponse();
