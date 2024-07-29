@@ -45,6 +45,7 @@ namespace LGLauncher
         private void selfUpdate_Click(object sender, EventArgs e)
         {
             ReCheckInstlattion();
+            meUpdatePrcoessBar.Value = 1;
             Download(me.RealDownloadPath);
         }
 
@@ -57,12 +58,14 @@ namespace LGLauncher
                 {
                     //req.UserAgent = "[any words that is more than 5 characters]";
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    MessageBox.Show("Started Downloading");
                     wc.DownloadFileAsync(
                        // Param1 = Link of file
                        new System.Uri(website),
                     // Param2 = Path to save
                        me.InstallationPath
                    );
+                    MessageBox.Show("Ended Downloading");
 
                 }
             }
@@ -76,18 +79,21 @@ namespace LGLauncher
         {
             //downloadLabel.Text = "Downloading: " + e.ProgressPercentage + "/100%";
             meUpdatePrcoessBar.Value = e.ProgressPercentage;
+            MessageBox.Show("Something Downloaded");
             if (e.ProgressPercentage == 100) Finish();
         }
 
         public void ReCheckInstlattion()
         {
+            string MePosition = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string BatContent = "@echo off\n"
-                + "powershell -Command \"Expand-Archive '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath + "' -DestinationPath '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)+"'\"\n"
-                + " start '" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "' LGLauncher.exe";
+                + "powershell -Command \"Expand-Archive '" + MePosition + "' -DestinationPath '" + MePosition + "'\"\n"
+                + " start '" + MePosition + "' LGLauncher.exe";
             write("UnPack.bat",BatContent);
         }
         void Finish() 
         {
+            MessageBox.Show("Finished Downloading");
             System.Diagnostics.Process.Start("UnPack.bat");
             this.Close();
         }

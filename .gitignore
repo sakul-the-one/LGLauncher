@@ -7,7 +7,6 @@ src/LGLauncher/.vs/LGLauncher/v17/.suo
 src/LGLauncher/.vs/LGLauncher/v17/DocumentLayout.json
 src/LGLauncher/LGLauncher/LGLauncher.csproj
 /src/LGLauncher/LGLauncher/bin/Debug/Cache
-*.zip
 *.lgif
 *.json
 src/LGLauncher/.vs/LGLauncher/v17/.suo

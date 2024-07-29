@@ -29,7 +29,7 @@ namespace LGLauncher
             //Sets Data
             NewVersion = Data[0];
             RealDownloadPath = Data[1];
-            MessageBox.Show("\"" + Data[0] + "\"" + "\n" + "\"" + Version + "\"", "Something went alright! "+Name, MessageBoxButtons.OK, MessageBoxIcon.Question);
+           //MessageBox.Show("\"" + Data[0] + "\"" + "\n" + "\"" + Version + "\"", "Something went alright! "+Name, MessageBoxButtons.OK, MessageBoxIcon.Question);
             if (Version != Data[0]) //Check Version
                 return true;
             else BColor = Color.Green;
@@ -53,7 +53,7 @@ namespace LGLauncher
                     Everything[0] = sr.ReadLine();
                     Everything[1] = sr.ReadLine();
                 }
-                MessageBox.Show(Everything[0] + "\n" + Everything[1], "Something went alright! {getCurrentEverything} + " + DownloadPath, MessageBoxButtons.OK, MessageBoxIcon.Question );
+                //MessageBox.Show(Everything[0] + "\n" + Everything[1], "Something went alright! {getCurrentEverything} + " + DownloadPath, MessageBoxButtons.OK, MessageBoxIcon.Question );
                 return Everything;
             }
             catch (Exception ex)
