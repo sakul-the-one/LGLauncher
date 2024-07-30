@@ -1,10 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Threading;
 using System.Windows.Forms;
+using static LGLauncher.BetterImplementation;
 
 namespace LGLauncher
 {
@@ -14,7 +13,11 @@ namespace LGLauncher
         Form1 daddy;
         string ChachePath;
         int error = 0;
-        bool done =false;
+        bool AlreadyInstalled = false;
+
+
+        public event downloadFormFinished DownloadFormFinished;
+        public delegate void downloadFormFinished(object sender, Installation install);
 
         public DownloadForm(Installation install, Form1 Daddy)
         {
@@ -26,10 +29,9 @@ namespace LGLauncher
             InitializeComponent();
         }
 
-        
         public int UpdateApplication()
         {
-           // MessageBox.Show(installation.RealDownloadPath+ "\n" + installation.Name  +"\n" + installation.Version, "Something went alright! {UpdateApplication()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // MessageBox.Show(installation.RealDownloadPath+ "\n" + installation.Name  +"\n" + installation.Version, "Something went alright! {UpdateApplication()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Download(installation.RealDownloadPath);
             return error;
         }
@@ -40,16 +42,14 @@ namespace LGLauncher
                 //MessageBox.Show(website, "Something went alright! {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 using (WebClient wc = new WebClient())
                 {
-                    //req.UserAgent = "[any words that is more than 5 characters]";
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    wc.DownloadFileCompleted += Install;
                     wc.DownloadFileAsync(
                        // Param1 = Link of file
                        new System.Uri(website),
                        // Param2 = Path to save
                        ChachePath
                    );
-                    
-                    done = true;
                 }
             }
             catch (Exception ex)
@@ -61,22 +61,29 @@ namespace LGLauncher
         // Event to track the progress
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            downloadLabel.Text = "Downloading: " +e.ProgressPercentage + "/100%";
+            downloadLabel.Text = "Downloading: " + e.ProgressPercentage + "/100%";
             downloadBar.Value = e.ProgressPercentage;
-            if (e.ProgressPercentage == 100) Install();
         }
-        
-        void Install()
+
+        async void Install(object sender, AsyncCompletedEventArgs e)
         {
+            UpdateInstallation(this, new InstallProgressChangedEventArgs(0, 100));
             try
             {
                 if (Path.GetExtension(ChachePath) == ".zip")
                 {
-                    //Un-Zip
-                    string NewPath = installation.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(installation.Name);
-                    Program.CheckFolder(NewPath);
-                    //ZipFile.ExtractToDirectory(ChachePath, NewPath);
-                    ExtractZipFile(ChachePath, NewPath);
+                    if (Path.GetFileNameWithoutExtension(installation.Name) != "me") //We dont want to unzip ourself for now!
+                    {
+                        //Un-Zip
+                        string NewPath = installation.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(installation.Name);
+                        Program.CheckFolder(NewPath);
+                        //ZipFile.ExtractToDirectory(ChachePath, NewPath);
+                        //MessageBox.Show("0", "Something went alright! {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        BetterImplementation bi = new BetterImplementation(); //bi like a bitc
+                        bi.InstallProgressChanged += UpdateInstallation;
+                        await bi.ExtractZipFileAsync(ChachePath, NewPath);
+                    }
                 }
                 else
                 {
@@ -87,74 +94,59 @@ namespace LGLauncher
                 InstallLabel.Text = "Installing: 100/100%";
                 Finish();
             }
-            catch (System.IO.IOException) 
-            {
-                //We will ignore this. You can try it out without it, but it will just annoy you and it will somehow still works sooooooooooo
-            }
             catch (Exception ex)
             {
                 error += 1;
                 MessageBox.Show(ex.Message, "Something went wrong {Install()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                FinishWithError();
             }
         }
         void Finish()
         {
             //Update the Installation
-            FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine(installation.DownloadPath);// Updater Download path
-            sw.WriteLine(installation.InstallationPath);// Installpath
-            sw.WriteLine(installation.NewVersion); //Version
-            sw.Close();
+            if (Path.GetFileNameWithoutExtension(installation.Name) != "me") //We dont want to unzip ourself for now!
+            {
+                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(installation.DownloadPath);// Updater Download path
+                sw.WriteLine(installation.InstallationPath);// Installpath
+                sw.WriteLine(installation.NewVersion); //Version
+                sw.Close();
 
-            installation.Version = installation.NewVersion;//I hope this works, if not, then not.
-            daddy.UpdateList();
+                installation.Version = installation.NewVersion;//I hope this works, if not, then not.
+                daddy.UpdateList();
+            }
+            AlreadyInstalled = true;
 
+            DownloadFormFinished?.Invoke(this, installation);
             this.Close();
         }
 
-        void ExtractZipFile(string Origin, string NewLocation) 
+        void FinishWithError()
         {
-            FileStream fs = new FileStream(Origin, FileMode.Open);
-            ZipArchive archive = new ZipArchive(fs);
-            //Make Space (Deleting old Folders, needs to be done for most Games!)
-            foreach (ZipArchiveEntry file in archive.Entries)
+            //Update the Installation
+            if (Path.GetFileNameWithoutExtension(installation.Name) != "me")
             {
-                string completeFileName = Path.GetFullPath(Path.Combine(NewLocation, file.FullName));
-
-                if (!completeFileName.StartsWith(NewLocation, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
-                }
-
-                if (file.Name == "")
-                {// Assuming Empty for Directory
-                    Directory.Delete(Path.GetDirectoryName(completeFileName));
-                    continue;
-                }
-                //file.ExtractToFile(completeFileName, true);
+                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(installation.DownloadPath);// Updater Download path
+                sw.WriteLine(installation.InstallationPath);// Installpath
+                sw.WriteLine("ERROR -1"); //Version
+                sw.Close();
             }
 
-            //Afzer Space is there, create everything new!
-            foreach (ZipArchiveEntry file in archive.Entries)
-            {
-                string completeFileName = Path.GetFullPath(Path.Combine(NewLocation, file.FullName));
-
-                if (!completeFileName.StartsWith(NewLocation, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
-                }
-
-                if (file.Name == "")
-                {// Assuming Empty for Directory
-                    Directory.CreateDirectory(Path.GetDirectoryName(completeFileName));
-                    continue;
-                }
-                file.ExtractToFile(completeFileName, true);
-            }
-            fs.Dispose();
+            installation.Version = installation.NewVersion;//I hope this works, if not, then not.
+            daddy.UpdateList();
+            AlreadyInstalled = true;
+            this.Close();
         }
 
+        void UpdateInstallation(object sender, InstallProgressChangedEventArgs e)
+        {
+            installBar.Value = e.ProgressPercentageInt;
+            InstallLabel.Text = "Installing: " + e.ProgressPercentageInt + "/100%";
+        }
         //Biggest Lie in history :)))))
         private void continueButton_Click(object sender, EventArgs e)
         {

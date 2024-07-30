@@ -29,7 +29,6 @@ namespace LGLauncher
                 // Determine whether the directory exists.
                 if (Directory.Exists(path))
                 {
-                    //cConsole.WriteLine("That path exists already.");
                     return true;
                 }
                 else
@@ -37,13 +36,11 @@ namespace LGLauncher
                     // Try to create the directory.
                     if (!CreateNew) return false;
                     DirectoryInfo di = Directory.CreateDirectory(path);
-                    //cConsole.WriteLine("The directory was created successfully at " + Directory.GetCreationTime(path) + ".");
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                //cConsole.WriteLine("The process failed: " + e.ToString());
                 MessageBox.Show(ex.Message, "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }

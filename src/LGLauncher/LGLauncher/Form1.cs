@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -21,9 +22,9 @@ namespace LGLauncher
             me = new Installation(); //Me is always Hardcoded, to make it simple
 
             me.Name = "me";
-            me.Version = "0.0.2";
+            me.Version = "0.0.1t2";
             me.DownloadPath = @"https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGLauncher.redir";
-            me.InstallationPath = "\\Cache\\self.zip";
+            me.InstallationPath = "\\Cache\\me.zip";
 
             MeUpdate = me.NeedsUpdate();
             // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
@@ -41,61 +42,35 @@ namespace LGLauncher
             //Intialising all Installs:
             UpdateList();
         }
+
         //SelfUpdateStuff
         private void selfUpdate_Click(object sender, EventArgs e)
         {
             ReCheckInstlattion();
             meUpdatePrcoessBar.Value = 1;
-            Download(me.RealDownloadPath);
+            //MessageBox.Show("Stop", "Something went right", MessageBoxButtons.OK, MessageBoxIcon.Error); //For Debugging
+            //Download(me.RealDownloadPath);
+            DownloadForm df = new DownloadForm(me, this);
+            //df.ShowInTaskbar = true;
+            df.Show();
+            df.DownloadFormFinished += Finish;
+            df.UpdateApplication();
         }
-
-        void Download(string website)
+        void Finish(object sender, Installation install)// AsyncCompletedEventArgs e)
         {
-            try
-            {
-                //MessageBox.Show(website, "Something went alright! {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                using (WebClient wc = new WebClient())
-                {
-                    //req.UserAgent = "[any words that is more than 5 characters]";
-                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                    MessageBox.Show("Started Downloading");
-                    wc.DownloadFileAsync(
-                       // Param1 = Link of file
-                       new System.Uri(website),
-                    // Param2 = Path to save
-                       me.InstallationPath
-                   );
-                    MessageBox.Show("Ended Downloading");
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\n" + website, "Something went wrong {Download()}", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        // Event to track the progress
-        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            //downloadLabel.Text = "Downloading: " + e.ProgressPercentage + "/100%";
-            meUpdatePrcoessBar.Value = e.ProgressPercentage;
-            MessageBox.Show("Something Downloaded");
-            if (e.ProgressPercentage == 100) Finish();
+            //MessageBox.Show("Finished Downloading");
+            System.Diagnostics.Process.Start("UnPack.bat");
+            this.Close();
         }
 
         public void ReCheckInstlattion()
         {
             string MePosition = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string BatContent = "@echo off\n"
-                + "powershell -Command \"Expand-Archive '" + MePosition + "' -DestinationPath '" + MePosition + "'\"\n"
-                + " start '" + MePosition + "' LGLauncher.exe";
+                + "echo Unzipping the new Installationfile\n"
+                + "powershell -Command \"Expand-Archive '" + MePosition + me.InstallationPath+ "' -DestinationPath '" + MePosition + "' -Force\"\n"
+                + "start \"\" \"" + MePosition + "\\LGLauncher.exe\"";
             write("UnPack.bat",BatContent);
-        }
-        void Finish() 
-        {
-            MessageBox.Show("Finished Downloading");
-            System.Diagnostics.Process.Start("UnPack.bat");
-            this.Close();
         }
 
         //Really Needed Functions
@@ -271,6 +246,22 @@ namespace LGLauncher
             }
             sr.Close();
             return Texxt;
+        }
+        public static string[] readWeb(string DownloadPath, int HowManyLines) 
+        {
+            string[] Everything = new string[HowManyLines];
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(DownloadPath);
+            request.UseDefaultCredentials = true;
+            request.UserAgent = "LGLauncher-UpdateRequest";
+            WebResponse response = request.GetResponse();
+            Stream data = response.GetResponseStream();
+            using (StreamReader sr = new StreamReader(data))
+            {
+                for (int i = 0; i < Everything.Length; i++)
+                    Everything[i] = sr.ReadLine();
+            }
+            return Everything;
         }
     }
 }
