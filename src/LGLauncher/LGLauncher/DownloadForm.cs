@@ -22,10 +22,14 @@ namespace LGLauncher
         public DownloadForm(Installation install, Form1 Daddy)
         {
             this.installation = install;
-            ChachePath = @"Cache\" + install.Name + (Path.GetExtension(install.RealDownloadPath).ToLower() == ".zip" ? ".zip" : "");
             daddy = Daddy;
-            //Chache Folder
-            this.Text = install.Name;
+
+            if (install.Name != null)
+            {
+                //Chache Folder
+                ChachePath = @"Cache\" + install.Name + (Path.GetExtension(install.RealDownloadPath).ToLower() == ".zip" ? ".zip" : "");
+                this.Text = install.Name; //Not Important anymore (Updated Design)
+            }
             InitializeComponent();
         }
 
@@ -136,9 +140,11 @@ namespace LGLauncher
                 sw.Close();
             }
 
-            installation.Version = installation.NewVersion;//I hope this works, if not, then not.
+            installation.Version = "ERROR -1";//I hope this works, if not, then not.
             daddy.UpdateList();
             AlreadyInstalled = true;
+
+            DownloadFormFinished?.Invoke(this, installation);
             this.Close();
         }
 
@@ -156,6 +162,26 @@ namespace LGLauncher
         private void pauseButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void arbortButton_Click(object sender, EventArgs e)
+        {
+            //Update the Installation
+            if (Path.GetFileNameWithoutExtension(installation.Name) != "me" && installation.Name != null)
+            {
+                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(installation.DownloadPath);// Updater Download path
+                sw.WriteLine(installation.InstallationPath);// Installpath
+                sw.WriteLine(installation.Version); //Version
+                sw.Close();
+            }
+
+            daddy.UpdateList();
+            AlreadyInstalled = true;
+
+            DownloadFormFinished?.Invoke(this, installation);
+            this.Close();
         }
     }
 }

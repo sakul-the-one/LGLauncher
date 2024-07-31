@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Security.Policy;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Forms;
 
 namespace LGLauncher
@@ -15,6 +15,15 @@ namespace LGLauncher
         Dictionary<string, Installation> _installations;
         Installation me;
         bool MeUpdate = false;
+
+        void DebugOtherWindows()
+        {
+            DownloadForm df = new DownloadForm(new Installation(), this);
+            df.Show();
+
+            CreateInstallationPath CIP = new CreateInstallationPath(this);
+            CIP.Show();
+        }
         public Form1(string[] args)
         {
             InitializeComponent();
@@ -22,32 +31,33 @@ namespace LGLauncher
             me = new Installation(); //Me is always Hardcoded, to make it simple
 
             me.Name = "me";
-            me.Version = "0.0.1t2";
+            me.Version = "0.0.1t3";
             me.DownloadPath = @"https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGLauncher.redir";
             me.InstallationPath = "\\Cache\\me.zip";
 
             MeUpdate = me.NeedsUpdate();
             // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
             ReCheckInstlattion();
-            if (MeUpdate) 
+            if (MeUpdate)
             {
                 launcherStatusLabel.Text = "New Update aviable: " + me.Version + " --> " + me.NewVersion;
             }
-            else 
+            else
             {
-                meUpdatePrcoessBar.Visible = false;
                 selfUpdate.Visible = false;
                 launcherStatusLabel.Text = me.Version;
             }
             //Intialising all Installs:
             UpdateList();
+
+            //Debugging
+            DebugOtherWindows();
         }
 
         //SelfUpdateStuff
         private void selfUpdate_Click(object sender, EventArgs e)
         {
             ReCheckInstlattion();
-            meUpdatePrcoessBar.Value = 1;
             //MessageBox.Show("Stop", "Something went right", MessageBoxButtons.OK, MessageBoxIcon.Error); //For Debugging
             //Download(me.RealDownloadPath);
             DownloadForm df = new DownloadForm(me, this);
@@ -68,9 +78,9 @@ namespace LGLauncher
             string MePosition = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string BatContent = "@echo off\n"
                 + "echo Unzipping the new Installationfile\n"
-                + "powershell -Command \"Expand-Archive '" + MePosition + me.InstallationPath+ "' -DestinationPath '" + MePosition + "' -Force\"\n"
+                + "powershell -Command \"Expand-Archive '" + MePosition + me.InstallationPath + "' -DestinationPath '" + MePosition + "' -Force\"\n"
                 + "start \"\" \"" + MePosition + "\\LGLauncher.exe\"";
-            write("UnPack.bat",BatContent);
+            write("UnPack.bat", BatContent);
         }
 
         //Really Needed Functions
@@ -81,7 +91,10 @@ namespace LGLauncher
             try
             {
                 string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\");
-                //cConsole.WriteLine("Found " + files.GetLength().ToString() + " Files");
+
+                int img = 0;
+                ImageList imageList = new ImageList();
+                imageList.ImageSize = new Size(64, 64);
 
                 foreach (string file in files)
                 {
@@ -99,10 +112,15 @@ namespace LGLauncher
                     sr.Close();
 
                     //bool NeedsUpdate = install.NeedsUpdate(); //Removed, because it would be just to much for that Function #ICanReadMyCode
-                    //adding it
-                    listView1.Items.Add(name);
+                    //adding it with Picture, maybe?
+                    imageList.Images.Add(CreateBitmapFromText(name[0].ToString()));
+
+                    listView1.Items.Add(Path.GetFileNameWithoutExtension(name), img);
                     _installations.Add(name, install);
+                    img++;
                 }
+
+                listView1.LargeImageList = imageList;
                 // comboBox1.SelectedIndex = index;
             }
             catch (Exception ex)
@@ -110,8 +128,42 @@ namespace LGLauncher
                 MessageBox.Show(ex.Message, "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private Bitmap CreateBitmapFromText(string text)
+        {
+            Bitmap bmp = new Bitmap(64, 64);
+            RectangleF rectf = new RectangleF(10, 10, 64, 64);
 
-       // string CInstallKey;
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                //new Color(100,112, 146, 190));
+
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.Clear(Color.Transparent);
+
+                //------------Pixels: X < 32 -> Round Corners; X = 32 -> Complete Circle; X = 63 -> This wierd (But also cool) atom shape
+                int CornerRadius = 64;
+                CornerRadius *= 2; //Leave the *2 for ehhhh, idk, ask this guy: https://stackoverflow.com/questions/1758762/how-to-create-image-with-rounded-corners-in-c
+                GraphicsPath gp = new GraphicsPath();
+                Brush brush = new SolidBrush(Color.FromArgb(88, 101, 190)); //Colors: 112, 146, 190
+                gp.AddArc(0, 0, CornerRadius, CornerRadius, 180, 90);
+                gp.AddArc(0 + 64 - CornerRadius, 0, CornerRadius, CornerRadius, 270, 90);
+                gp.AddArc(0 + 64 - CornerRadius, 0 + 64 - CornerRadius, CornerRadius, CornerRadius, 0, 90);
+                gp.AddArc(0, 0 + 64 - CornerRadius, CornerRadius, CornerRadius, 90, 90);
+                g.FillPath(brush, gp);
+
+                using (Font font = new Font("Arial", 32))
+                {
+                    g.DrawString(text, font, Brushes.Black, rectf);
+                }
+
+                g.Flush();
+            }
+
+            return bmp;
+        }
+        // string CInstallKey;
         public void UpdateList(bool CheckForUpdates = true, string CheckJustThis = "")
         {
             UpdateInstalls();
@@ -119,7 +171,7 @@ namespace LGLauncher
             {
                 for (int i = 0; i < listView1.Items.Count; i++) //ListView items are sorted in Numbers, not strings like our Dictionary! => For Loop instead of foreach!
                 {
-                    string CurrentFile = listView1.Items[i].Text; //We never changed the name of the item, but rather the Text
+                    string CurrentFile = listView1.Items[i].Text + ".lgif"; //We never changed the name of the item, but rather the Text
                     bool Needsupdate = _installations[CurrentFile].NeedsUpdate();
                     if (Needsupdate)
                     {
@@ -137,46 +189,48 @@ namespace LGLauncher
         //Buttons
         private void updateButton_Click(object sender, EventArgs e) //UpdateALL
         {
-            foreach (KeyValuePair<string, Installation> install in _installations) 
+            foreach (KeyValuePair<string, Installation> install in _installations)
             {
                 //bool Needsupdate = install.Value.NeedsUpdate(); //Changed to have less Data exchange with the Internet
-                if (install.Value.NewVersion != install.Value.Version) 
+                if (install.Value.NewVersion != install.Value.Version)
                 {
-                    //MessageBox.Show(install.Value.Name, "Something went alright!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    DownloadForm df = new DownloadForm(install.Value, this);
-                    //df.ShowInTaskbar = true;
-                    df.Show();
-                    df.UpdateApplication();
+                    UpdateThis(install.Value);
                 }
             }
-
         }
 
         //Used for only selected stuff
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!(listView1.SelectedItems.Count > 0)) 
-            {
-                selectedLabel.Text = "Selected: ";
-            }
-            else 
-            {
-                selectedLabel.Text = "Selected: " + listView1.SelectedItems[0].Text;//listView1.Items[listView1.index].Text;
-            }
-        }
-
         private void downloadSelectedButton_Click(object sender, EventArgs e)
         {
             if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
+            UpdateThis(_installations[listView1.SelectedItems[0].Text + ".lgif"]);
 
-            DownloadForm df = new DownloadForm(_installations[listView1.SelectedItems[0].Text], this);
-            df.Show();
-            df.UpdateApplication();
         }
-
-        private void NothingSelectedError() 
+        private void createShortcut_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("You have no item selected!", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
+            IShellLink link = (IShellLink)new ShellLink();
+
+            // setup shortcut information
+            //link.SetDescription("This is the description when hovered over.");
+            Installation Cinstall = _installations[listView1.SelectedItems[0].Text + ".lgif"];
+            link.SetPath(Cinstall.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) +".exe");
+
+            // save it
+            IPersistFile file = (IPersistFile)link;
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            file.Save(Path.Combine(desktopPath, listView1.SelectedItems[0].Text  + ".lnk"), false);
+        }    
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!(listView1.SelectedItems.Count > 0))
+            {
+                selectedLabel.Text = "Selected: ";
+            }
+            else
+            {
+                selectedLabel.Text = "Selected: " + listView1.SelectedItems[0].Text;//listView1.Items[listView1.index].Text;
+            }
         }
 
         //ToolStrip
@@ -219,8 +273,48 @@ namespace LGLauncher
                 if (folderBrowser.ShowDialog() == DialogResult.OK)
                 {
                     string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
-                    write("Installations\\" + NewFileName, Downloadpath + "\n" + folderPath + "\n-1");
+                    write(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + NewFileName, Downloadpath + "\n" + folderPath + "\n-1");
                 }
+            }
+        }
+
+        private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IEnumerable<string> files = Directory.EnumerateFiles("Cache");
+            long size = 0;
+            int UnitType = 0;
+            string Unit;
+
+            foreach (string file in files)
+            {
+                long length = new FileInfo(file).Length; //Result in Bytes (8 Bits)
+                size += length;
+            }
+
+            while (size > 1024 && UnitType < 3) //No need for bigger than GB
+            {
+                size /= 1024;
+                UnitType++;
+            }
+            switch (UnitType)
+            {
+                case 0: Unit = " Bytes"; break;
+                case 1: Unit = " KB"; break;
+                case 2: Unit = " MB"; break;
+                case 3: Unit = " GB"; break;
+                //Default
+                default: Unit = " Bytes"; break;
+            }
+
+            DialogResult mb = MessageBox.Show("Do you really want to clear the Cache? (" + size + Unit + " of all files in the Cache)", "Clear Cache?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (mb == DialogResult.Yes)
+            {
+                foreach (string file in files)
+                {
+                    FileInfo FI = new FileInfo(file);
+                    FI.Delete();
+                }
+                MessageBox.Show("The Cache was cleared! (" + size + Unit + " of all files in the Cache)", "Cleared Cache", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -247,7 +341,8 @@ namespace LGLauncher
             sr.Close();
             return Texxt;
         }
-        public static string[] readWeb(string DownloadPath, int HowManyLines) 
+        //This isnt copied from 2020, but still needed Function
+        public static string[] readWeb(string DownloadPath, int HowManyLines)
         {
             string[] Everything = new string[HowManyLines];
 
@@ -262,6 +357,16 @@ namespace LGLauncher
                     Everything[i] = sr.ReadLine();
             }
             return Everything;
+        }
+        private void NothingSelectedError()
+        {
+            MessageBox.Show("You have no item selected!", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        void UpdateThis(Installation install)
+        {
+            DownloadForm df = new DownloadForm(install, this);
+            df.Show();
+            df.UpdateApplication();
         }
     }
 }
