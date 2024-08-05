@@ -41,16 +41,24 @@
             // createInstallFileButton
             // 
             this.createInstallFileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.createInstallFileButton.BackColor = System.Drawing.Color.Lime;
+            this.createInstallFileButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.createInstallFileButton.FlatAppearance.BorderSize = 2;
+            this.createInstallFileButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.ForestGreen;
+            this.createInstallFileButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Green;
+            this.createInstallFileButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.createInstallFileButton.Location = new System.Drawing.Point(416, 406);
             this.createInstallFileButton.Name = "createInstallFileButton";
             this.createInstallFileButton.Size = new System.Drawing.Size(75, 23);
             this.createInstallFileButton.TabIndex = 0;
             this.createInstallFileButton.Text = "Create";
-            this.createInstallFileButton.UseVisualStyleBackColor = true;
+            this.createInstallFileButton.UseVisualStyleBackColor = false;
             this.createInstallFileButton.Click += new System.EventHandler(this.createInstallFileButton_Click);
             // 
             // URLTextBox
             // 
+            this.URLTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.URLTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.URLTextBox.Location = new System.Drawing.Point(12, 85);
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.Size = new System.Drawing.Size(229, 20);
@@ -67,6 +75,8 @@
             // 
             // downloadLocationTextBox
             // 
+            this.downloadLocationTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.downloadLocationTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.downloadLocationTextBox.Location = new System.Drawing.Point(12, 136);
             this.downloadLocationTextBox.Name = "downloadLocationTextBox";
             this.downloadLocationTextBox.Size = new System.Drawing.Size(229, 20);
@@ -83,12 +93,14 @@
             // 
             // FindInstallPath
             // 
+            this.FindInstallPath.BackColor = System.Drawing.Color.Gold;
+            this.FindInstallPath.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.FindInstallPath.Location = new System.Drawing.Point(247, 134);
             this.FindInstallPath.Name = "FindInstallPath";
             this.FindInstallPath.Size = new System.Drawing.Size(37, 23);
             this.FindInstallPath.TabIndex = 5;
             this.FindInstallPath.Text = "Find";
-            this.FindInstallPath.UseVisualStyleBackColor = true;
+            this.FindInstallPath.UseVisualStyleBackColor = false;
             this.FindInstallPath.Click += new System.EventHandler(this.FindInstallPath_Click);
             // 
             // label3
@@ -102,6 +114,8 @@
             // 
             // nameTextBox
             // 
+            this.nameTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.nameTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.nameTextBox.Location = new System.Drawing.Point(12, 46);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(100, 20);
@@ -111,6 +125,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.GrayText;
             this.ClientSize = new System.Drawing.Size(503, 441);
             this.Controls.Add(this.nameTextBox);
             this.Controls.Add(this.label3);

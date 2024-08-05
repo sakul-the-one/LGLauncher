@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -15,6 +16,12 @@ namespace LGLauncher
         Dictionary<string, Installation> _installations;
         Installation me;
         bool MeUpdate = false;
+        string CachePath = "Cache";
+        string InstallationsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\";
+        int Downloads = 0;
+        bool ClosingPending = false;
+        List<Installation> CurrentOnUpdate = new List<Installation>(); //Damm, this could be used insted of `int Downloads = 0;`... Anyway, maybe gonna fix this some time later
+        List<Installation> StartAfterUpdate = new List<Installation>();
 
         void DebugOtherWindows()
         {
@@ -24,20 +31,20 @@ namespace LGLauncher
             CreateInstallationPath CIP = new CreateInstallationPath(this);
             CIP.Show();
         }
-        public Form1(string[] args)
+        public Form1(string[] args, bool debug = false)
         {
             InitializeComponent();
             //Creation of Me
             me = new Installation(); //Me is always Hardcoded, to make it simple
 
             me.Name = "me";
-            me.Version = "0.0.1t3";
+            me.Version = "0.0.2";
             me.DownloadPath = @"https://github.com/sakul-the-one/LGLauncher/raw/main/build/LGLauncher.redir";
-            me.InstallationPath = "\\Cache\\me.zip";
+            me.InstallationPath = "\\" + CachePath + "\\me.zip";
 
             MeUpdate = me.NeedsUpdate();
-            // MessageBox.Show(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + me.InstallationPath, "Hi!");
             ReCheckInstlattion();
+
             if (MeUpdate)
             {
                 launcherStatusLabel.Text = "New Update aviable: " + me.Version + " --> " + me.NewVersion;
@@ -47,11 +54,12 @@ namespace LGLauncher
                 selfUpdate.Visible = false;
                 launcherStatusLabel.Text = me.Version;
             }
+
             //Intialising all Installs:
             UpdateList();
-
-            //Debugging
-            DebugOtherWindows();
+            HandleArguments(args); //needs to be after the list is updated!
+            if (debug)
+                DebugOtherWindows();
         }
 
         //SelfUpdateStuff
@@ -70,7 +78,7 @@ namespace LGLauncher
         {
             //MessageBox.Show("Finished Downloading");
             System.Diagnostics.Process.Start("UnPack.bat");
-            this.Close();
+            this.Close(); //Force Close. If you Download something else, it is kinda your problem though
         }
 
         public void ReCheckInstlattion()
@@ -90,7 +98,7 @@ namespace LGLauncher
             _installations = new Dictionary<string, Installation>();
             try
             {
-                string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\");
+                string[] files = Directory.GetFiles(InstallationsPath);
 
                 int img = 0;
                 ImageList imageList = new ImageList();
@@ -143,7 +151,7 @@ namespace LGLauncher
                 g.Clear(Color.Transparent);
 
                 //------------Pixels: X < 32 -> Round Corners; X = 32 -> Complete Circle; X = 63 -> This wierd (But also cool) atom shape
-                int CornerRadius = 64;
+                int CornerRadius = 16;
                 CornerRadius *= 2; //Leave the *2 for ehhhh, idk, ask this guy: https://stackoverflow.com/questions/1758762/how-to-create-image-with-rounded-corners-in-c
                 GraphicsPath gp = new GraphicsPath();
                 Brush brush = new SolidBrush(Color.FromArgb(88, 101, 190)); //Colors: 112, 146, 190
@@ -204,23 +212,33 @@ namespace LGLauncher
         {
             if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
             UpdateThis(_installations[listView1.SelectedItems[0].Text + ".lgif"]);
-
         }
         private void createShortcut_Click(object sender, EventArgs e)
         {
             if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
-            IShellLink link = (IShellLink)new ShellLink();
 
+            string MePosition = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            IShellLink link = (IShellLink)new ShellLink();
             // setup shortcut information
             //link.SetDescription("This is the description when hovered over.");
             Installation Cinstall = _installations[listView1.SelectedItems[0].Text + ".lgif"];
-            link.SetPath(Cinstall.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) +".exe");
-
+            //link.SetPath(Cinstall.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + ".exe");
+            link.SetPath(MePosition + "\\LGLauncher.exe");
+            link.SetArguments("-cfus " + Cinstall.Name); //cfus => Check for Update & Start//See HandleArguments() for more commands
+            link.SetWorkingDirectory(MePosition);
             // save it
             IPersistFile file = (IPersistFile)link;
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            file.Save(Path.Combine(desktopPath, listView1.SelectedItems[0].Text  + ".lnk"), false);
-        }    
+            file.Save(Path.Combine(desktopPath, listView1.SelectedItems[0].Text + ".lnk"), false);
+        }
+
+        private void startSelected_Click(object sender, EventArgs e)
+        {
+            if (!(listView1.SelectedItems.Count > 0)) { NothingSelectedError(); return; }
+            PendingStart(_installations[listView1.SelectedItems[0].Text + ".lgif"]);
+        }
+
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!(listView1.SelectedItems.Count > 0))
@@ -242,45 +260,12 @@ namespace LGLauncher
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ImportDialog = new OpenFileDialog();
-            ImportDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";//= Directory.GetCurrentDirectory();
-            ImportDialog.Title = "Select an Import File";
-            ImportDialog.Filter = "LG Import Files(*.lgif)|*.lgif" + "|All Files(*.*)|*.*";
-            if (ImportDialog.ShowDialog() == DialogResult.OK)
-            {
-                string path = ImportDialog.FileName;
-                //write(@"Installations\"+ Path.GetFileName(path), read(path));
-
-                FileStream fs = new FileStream(path, FileMode.Open);
-                StreamReader sr = new StreamReader(fs);
-                string Downloadpath = sr.ReadLine();
-                sr.Close();
-
-                string NewFileName = Path.GetFileName(path);
-                if (Path.GetExtension(path) != ".lgif")
-                    NewFileName += ".lgif";
-
-
-                OpenFileDialog folderBrowser = new OpenFileDialog();
-                // Set validate names and check file exists to false otherwise windows will
-                // not let you select "Folder Selection."
-                folderBrowser.ValidateNames = false;
-                folderBrowser.CheckFileExists = false;
-                folderBrowser.CheckPathExists = true;
-                // Always default to Folder Selection.
-                folderBrowser.FileName = "Folder Selection.";
-
-                if (folderBrowser.ShowDialog() == DialogResult.OK)
-                {
-                    string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
-                    write(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + NewFileName, Downloadpath + "\n" + folderPath + "\n-1");
-                }
-            }
+            ImportImportFile();
         }
 
         private void clearCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IEnumerable<string> files = Directory.EnumerateFiles("Cache");
+            IEnumerable<string> files = Directory.EnumerateFiles(CachePath);
             long size = 0;
             int UnitType = 0;
             string Unit;
@@ -364,9 +349,140 @@ namespace LGLauncher
         }
         void UpdateThis(Installation install)
         {
+            CurrentOnUpdate.Add(install);
             DownloadForm df = new DownloadForm(install, this);
+            Downloads++;
             df.Show();
+            df.DownloadFormFinished += DownloadingFinished;
             df.UpdateApplication();
+        }
+        void DownloadingFinished(object sender, Installation install)
+        {
+            Downloads--;
+            CurrentOnUpdate.Remove(install);
+            if (StartAfterUpdate.Contains(install))
+            {
+                StartAfterUpdate.Remove(install);
+                PendingStart(install);
+            }
+            if (ClosingPending) BClose();//The same as return;
+        }
+
+        void HandleArguments(string[] args, bool ProgrammStart = true)
+        {
+            if (args.Length == 0) return;
+            if (Path.GetExtension(args[0]) == ".lgif" || Path.GetExtension(args[0]) == "lgif") ImportImportFile(args[0]); //Still dont know if it needs the dot or not
+            if (args[0][0] == '-')
+            {
+                if (ProgrammStart) this.Hide();
+
+                string game = "";
+                for (int i = 1; i < args.Length; i++)
+                {
+                    game += args[i] + " ";
+                }
+                //MessageBox.Show(args[0] + "\n" + game, "Hi");
+                Installation Cinstall = _installations[game.Remove(game.Length - 1)];
+
+                //Process.Start("explorer.exe", Cinstall.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + "\\");
+
+                //MessageBox.Show((Cinstall.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + "\\" + Path.GetFileNameWithoutExtension(Cinstall.Name) + ".exe"), "explorer.exe");
+                switch (args[0])
+                {
+                    case "-checkForUpdateStart":
+                    case "-cfus": if (Cinstall.NeedsUpdate()) { UpdateThis(Cinstall); } PendingStart(Cinstall); break; //Check for Update & Start
+                    case "-checkForUpdate":
+                    case "-cfu": if (Cinstall.NeedsUpdate()) { UpdateThis(Cinstall);  } break; //Check for Update
+                    case "-start":
+                    case "-s": PendingStart(Cinstall); break; //Start
+                    case "-download":
+                    case "-d": UpdateThis(Cinstall); break; //Download
+                    case "-downloadStart":
+                    case "-ds": UpdateThis(Cinstall); PendingStart(Cinstall); break; //Download
+                }
+                if(ProgrammStart)
+                    BClose();
+            }
+        }
+
+        void BClose() // -> BetterClose
+        {
+            if (Downloads <= 0) //actually, this shouldnt be under 0!
+                this.Close();
+            else ClosingPending = true;
+        }
+
+        void PendingStart(Installation install)
+        {
+            if (!CurrentOnUpdate.Contains(install))
+                Process.Start(install.InstallationPath + "\\" + Path.GetFileNameWithoutExtension(install.Name) + "\\" + Path.GetFileNameWithoutExtension(install.Name) + ".exe");
+            else
+                StartAfterUpdate.Add(install);
+        }
+
+        void ImportImportFile(string arg = "")
+        {
+            if (arg != "")
+            {
+                FileStream fs = new FileStream(arg, FileMode.Open);
+                StreamReader sr = new StreamReader(fs);
+                string Downloadpath = sr.ReadLine();
+                sr.Close();
+
+                string NewFileName = Path.GetFileName(arg);
+                if (Path.GetExtension(arg) != ".lgif")
+                    NewFileName += ".lgif";
+
+
+                OpenFileDialog folderBrowser = new OpenFileDialog();
+                // Set validate names and check file exists to false otherwise windows will
+                // not let you select "Folder Selection."
+                folderBrowser.ValidateNames = false;
+                folderBrowser.CheckFileExists = false;
+                folderBrowser.CheckPathExists = true;
+                // Always default to Folder Selection.
+                folderBrowser.FileName = "Folder Selection.";
+                if (folderBrowser.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                    write(InstallationsPath + NewFileName, Downloadpath + "\n" + folderPath + "\n-1");
+                }
+                return;
+            }
+            OpenFileDialog ImportDialog = new OpenFileDialog();
+            ImportDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\Downloads";//= Directory.GetCurrentDirectory();
+            ImportDialog.Title = "Select an Import File";
+            ImportDialog.Filter = "LG Import Files(*.lgif)|*.lgif" + "|All Files(*.*)|*.*";
+            if (ImportDialog.ShowDialog() == DialogResult.OK)
+            {
+                string path = ImportDialog.FileName;
+                //write(@"Installations\"+ Path.GetFileName(path), read(path));
+
+                FileStream fs = new FileStream(path, FileMode.Open);
+                StreamReader sr = new StreamReader(fs);
+                string Downloadpath = sr.ReadLine();
+                sr.Close();
+
+                string NewFileName = Path.GetFileName(path);
+                if (Path.GetExtension(path) != ".lgif")
+                    NewFileName += ".lgif";
+
+
+                OpenFileDialog folderBrowser = new OpenFileDialog();
+                // Set validate names and check file exists to false otherwise windows will
+                // not let you select "Folder Selection."
+                folderBrowser.ValidateNames = false;
+                folderBrowser.CheckFileExists = false;
+                folderBrowser.CheckPathExists = true;
+                // Always default to Folder Selection.
+                folderBrowser.FileName = "Folder Selection.";
+
+                if (folderBrowser.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                    write(InstallationsPath + NewFileName, Downloadpath + "\n" + folderPath + "\n-1");
+                }
+            }
         }
     }
 }

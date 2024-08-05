@@ -12,6 +12,7 @@ namespace LGLauncher
         Installation installation;
         Form1 daddy;
         string ChachePath;
+        string InstallationsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\";
         int error = 0;
         bool AlreadyInstalled = false;
 
@@ -111,7 +112,7 @@ namespace LGLauncher
             //Update the Installation
             if (Path.GetFileNameWithoutExtension(installation.Name) != "me") //We dont want to unzip ourself for now!
             {
-                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                FileStream fs = new FileStream(InstallationsPath + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.WriteLine(installation.DownloadPath);// Updater Download path
                 sw.WriteLine(installation.InstallationPath);// Installpath
@@ -132,7 +133,7 @@ namespace LGLauncher
             //Update the Installation
             if (Path.GetFileNameWithoutExtension(installation.Name) != "me")
             {
-                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                FileStream fs = new FileStream(InstallationsPath + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.WriteLine(installation.DownloadPath);// Updater Download path
                 sw.WriteLine(installation.InstallationPath);// Installpath
@@ -167,9 +168,12 @@ namespace LGLauncher
         private void arbortButton_Click(object sender, EventArgs e)
         {
             //Update the Installation
+            if (DialogResult.Yes != MessageBox.Show("Do you really want to abort the download?", "Abort?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                return;
+
             if (Path.GetFileNameWithoutExtension(installation.Name) != "me" && installation.Name != null)
             {
-                FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
+                FileStream fs = new FileStream(InstallationsPath + Path.GetFileNameWithoutExtension(installation.Name) + ".lgif", FileMode.Create);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.WriteLine(installation.DownloadPath);// Updater Download path
                 sw.WriteLine(installation.InstallationPath);// Installpath

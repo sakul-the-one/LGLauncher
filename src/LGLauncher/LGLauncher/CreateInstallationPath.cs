@@ -7,6 +7,8 @@ namespace LGLauncher
     public partial class CreateInstallationPath : Form
     {
         Form1 Daddy;
+        //string CachePath = "Cache";
+        string InstallationsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\";
         public CreateInstallationPath(Form1 daddy)
         {
             InitializeComponent();
@@ -19,11 +21,24 @@ namespace LGLauncher
             string Name = nameTextBox.Text;
             string DownloadPath = URLTextBox.Text;
             string InstallPath = downloadLocationTextBox.Text; //Why did I choose this name?
+
+            //Try to catch Typos
+            try { 
+                string[] result = Form1.readWeb(DownloadPath, 2);
+            }
+            catch 
+            {
+                MessageBox.Show("Something wrong with the URL", "Something Wrong happend", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; //Make the User do it again
+            }
+            if (!Directory.Exists(InstallPath)) MessageBox.Show("This Path does not exist", "Something Wrong happend", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            //Do the actually Stuff
             if (Name.Length > 0 && DownloadPath.Length > 0 && InstallPath.Length > 0)
             {
                 try
                 {
-                    FileStream fs = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\" + Name + ".lgif", FileMode.Create);
+                    FileStream fs = new FileStream(InstallationsPath + Name + ".lgif", FileMode.Create);
                     StreamWriter sw = new StreamWriter(fs);
                     sw.WriteLine(DownloadPath);
                     sw.WriteLine(InstallPath);

@@ -15,11 +15,18 @@ namespace LGLauncher
         [STAThread]
         static void Main(string[] args)
         {
+            bool debug = false;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false); // "Installations" && "Cache"
             CheckFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Installations\");
             CheckFolder("Cache");
-            Application.Run(new Form1(args));
+            if (debug)
+            {
+                string[] newArgs = { "-ds", "Qubos", "Run.lgif" };
+                Application.Run(new Form1(newArgs, true));
+            }
+            else
+                Application.Run(new Form1(args));
         }
 
         public static bool CheckFolder(string path, bool CreateNew = true)

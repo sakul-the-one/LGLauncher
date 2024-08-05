@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.launcherStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.selfUpdate = new System.Windows.Forms.Button();
@@ -44,6 +45,7 @@
             this.selectedLabel = new System.Windows.Forms.Label();
             this.downloadSelectedButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.startSelected = new System.Windows.Forms.Button();
             this.createShortcut = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -202,6 +204,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.startSelected);
             this.panel1.Controls.Add(this.createShortcut);
             this.panel1.Controls.Add(this.selectedLabel);
             this.panel1.Controls.Add(this.downloadSelectedButton);
@@ -209,6 +212,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 318);
             this.panel1.TabIndex = 9;
+            // 
+            // startSelected
+            // 
+            this.startSelected.Location = new System.Drawing.Point(14, 103);
+            this.startSelected.Name = "startSelected";
+            this.startSelected.Size = new System.Drawing.Size(94, 23);
+            this.startSelected.TabIndex = 10;
+            this.startSelected.Text = "Start";
+            this.startSelected.UseVisualStyleBackColor = true;
+            this.startSelected.Click += new System.EventHandler(this.startSelected_Click);
             // 
             // createShortcut
             // 
@@ -233,6 +246,7 @@
             this.Controls.Add(this.selfUpdate);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(600, 370);
             this.Name = "Form1";
@@ -266,6 +280,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.Button createShortcut;
+        private System.Windows.Forms.Button startSelected;
     }
 }
 

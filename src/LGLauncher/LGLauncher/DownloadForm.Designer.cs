@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DownloadForm));
             this.downloadBar = new System.Windows.Forms.ProgressBar();
             this.installBar = new System.Windows.Forms.ProgressBar();
             this.downloadLabel = new System.Windows.Forms.Label();
@@ -103,13 +104,15 @@
             // 
             // arbortButton
             // 
-            this.arbortButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.arbortButton.BackColor = System.Drawing.Color.Red;
             this.arbortButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.arbortButton.FlatAppearance.BorderColor = System.Drawing.Color.Red;
+            this.arbortButton.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.arbortButton.FlatAppearance.BorderSize = 2;
+            this.arbortButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Maroon;
+            this.arbortButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Maroon;
+            this.arbortButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.arbortButton.ForeColor = System.Drawing.Color.White;
-            this.arbortButton.Location = new System.Drawing.Point(405, 138);
+            this.arbortButton.Location = new System.Drawing.Point(415, 138);
             this.arbortButton.Name = "arbortButton";
             this.arbortButton.Size = new System.Drawing.Size(75, 23);
             this.arbortButton.TabIndex = 6;
@@ -131,6 +134,7 @@
             this.Controls.Add(this.downloadLabel);
             this.Controls.Add(this.installBar);
             this.Controls.Add(this.downloadBar);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(518, 217);
             this.MinimumSize = new System.Drawing.Size(518, 217);
